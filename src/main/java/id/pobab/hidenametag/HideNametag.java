@@ -12,7 +12,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
+import java.util.List;
+
 @Mod(HideNametag.MODID)
 public class HideNametag {
     public static final String MODID = "hidenametag";
@@ -31,7 +32,10 @@ public class HideNametag {
             playerTeam.setNameTagVisibility(Visibility.NEVER);
         }
         String teamName = scoreboard.getTeamNames().stream().findFirst().get();
-        scoreboard.addPlayerToTeam(player.getName().toString(), scoreboard.getPlayerTeam(teamName));
+        PlayerTeam team = scoreboard.getPlayerTeam(teamName);
+        List<String> teamMember = team.getPlayers().stream().toList();
+        if (teamMember.contains(player.getName().toString())) return;
+        scoreboard.addPlayerToTeam(player.getName().toString(), team);
     }
 
 }
